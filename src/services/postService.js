@@ -1,5 +1,5 @@
 
-import { createPost } from "../repositories/postRepository.js"
+import { createPost, deletePostById, findAllPosts, findPostById } from "../repositories/postRepository.js"
 export const createPostService = async(createPostObject)=>{
 
     // this is the core business logic part .. first write al the steps then code ok??÷
@@ -13,5 +13,20 @@ export const createPostService = async(createPostObject)=>{
     // user will be added later
     // call the repository to talk with the database
     const post  = await createPost(caption,image)
+    return post
+}
+
+export const getAllPostService = async()=>{
+    const posts = await findAllPosts()
+    return posts
+}
+
+export const getPostByIdService = async(postId)=>{
+    const post = await findPostById(postId)
+    return post
+}
+
+export const deletePostService = async(postId)=>{
+    const post = await deletePostById(postId)
     return post
 }

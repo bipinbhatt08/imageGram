@@ -1,6 +1,6 @@
 import express from 'express'
 import connectDB from './config/dbConfig.js'
-import { createPost } from '../src/controllers/postController.js'
+import { createPost, deletePostById, getAllPosts, getPostById } from '../src/controllers/postController.js'
 import { uploader } from './config/multerConfig.js'
 const app = express() // this app is a server object instance
 const PORT = 3000
@@ -20,7 +20,9 @@ app.get('/ping',(req,res)=>{
 })
 
 app.post('/posts',uploader.single('image'),createPost)
-
+app.get('/posts',getAllPosts)
+app.delete('/posts/:id',deletePostById)
+app.get('/posts/:id',getPostById)
 
 app.listen(PORT,()=>{
     console.log(`server is listening on port ${PORT}`)
