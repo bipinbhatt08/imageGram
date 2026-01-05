@@ -1,15 +1,17 @@
-import Post from "../schema/post";
+
+import Post from '../schema/post.js'
+
 
 
 export const createPost = async(caption,image,user)=>{
     try {
-        // const newPost = await Post.create({caption,image,user})
-        // return newPost
+        const newPost = await Post.create({caption,image,user})
+        return newPost
 
-        const newPost = new Post({caption,image,user})//this create post object in the memory
-        //it does not create the entry in the database
-        //to create entry in the database we call save() funciton
-        await newPost.save()
+        // const newPost = new post({caption,image,user})//this create post object in the memory
+        // //it does not create the entry in the database
+        // //to create entry in the database we call save() funciton
+        // await newPost.save()
         
     } catch (error) {
         console.log(error)
