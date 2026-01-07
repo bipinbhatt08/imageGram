@@ -17,14 +17,24 @@ export const createPost = async(caption,image,user)=>{
         console.log(error)
     }
 }
-export const findAllPosts = async()=>{
+export const findAllPosts = async(offset,limit)=>{
     try {
-        const posts = await Post.find()
+        const posts = await Post.find().sort({creaetedAt: -1}).skip(offset).limit(limit)
         return posts
     } catch (error) {
         console.log(error)
     }
 }
+
+export const countAllPosts = async()=>{
+    try {
+        const count = await Post.countDocuments()
+        return count
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export const findPostById = async(id)=>{
     try {
         const post = await Post.findById(id)

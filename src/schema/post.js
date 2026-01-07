@@ -13,7 +13,7 @@ const postSchema = mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,// this obejct id will always belong to the User collectioin
         ref:"User"// give the reference Collection
     }
-})
+},{timeStamps:true})
 
 const post = mongoose.model("Post",postSchema)
 export default post

@@ -1,5 +1,5 @@
 
-import { createPost, deletePostById, findAllPosts, findPostById } from "../repositories/postRepository.js"
+import { countAllPosts, createPost, deletePostById, findAllPosts, findPostById } from "../repositories/postRepository.js"
 export const createPostService = async(createPostObject)=>{
 
     // this is the core business logic part .. first write al the steps then code ok??÷
@@ -16,9 +16,12 @@ export const createPostService = async(createPostObject)=>{
     return post
 }
 
-export const getAllPostService = async()=>{
-    const posts = await findAllPosts()
-    return posts
+export const getAllPostService = async(offset,limit)=>{
+    const posts = await findAllPosts(offset,limit)
+    //calculate total number of page and total number of posts
+    const totalDocuments = await countAllPosts()
+    const totalPages = Math.ceil(totalDocuments / limit)
+    return {posts,totalDocuments,totalPages}
 }
 
 export const getPostByIdService = async(postId)=>{
