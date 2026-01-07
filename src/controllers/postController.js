@@ -68,6 +68,12 @@ export  const getPostById = async(req,res)=>{
 export const deletePostById = async(req,res)=>{
     try {
         const post = await deletePostService(req.params.id)
+        if(!post){
+            return res.status(404).json({
+            success:false,
+            message: "Post not found",
+        })
+        }
         return res.status(200).json({
             success: true,
             message: "Post deleted succesfully.",
