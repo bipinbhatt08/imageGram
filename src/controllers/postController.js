@@ -3,6 +3,16 @@ import { createPostService, deletePostService, getAllPostService, getPostByIdSer
 export const createPost = async(req,res)=>{
     try {
         // call the service layer funciton 
+
+        console.log(req.file, "I am from controller.")
+        if(!req.file || !req.file.location){
+            return res.status(400).json({
+            success:false,
+            message: "Image is required",
+     
+        })
+
+        }
         const post  =  await createPostService({
             caption: req.body.caption,
             image: req.file.location
@@ -18,7 +28,7 @@ export const createPost = async(req,res)=>{
         return res.status(500).json({
             success:false,
             message: "Internal server error.",
-            
+     
         })
     }
 }
@@ -91,6 +101,7 @@ export const deletePostById = async(req,res)=>{
 export const updatePostById = async(req,res)=>{
     try {
         const updateObject  = req.body
+        
         if(req.file){
             updateObject.image = req.file.location 
         }

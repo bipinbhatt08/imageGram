@@ -4,9 +4,11 @@
 import express from 'express'
 import { uploader } from '../../config/multerConfig.js';
 import { createPost, deletePostById, getAllPosts, getPostById, updatePostById } from '../../controllers/postController.js';
+import { validate } from '../../validators/zodValidator.js';
+import zodPostSchema from '../../validators/zodPostSchema.js';
 const router = express.Router(); //router object to modulerize the routers
 
-router.post('/',uploader.single('image'),createPost)
+router.post('/',uploader.single('image'),validate(zodPostSchema),createPost)
 router.get('/',getAllPosts)
 router.delete('/:id',deletePostById)
 router.get('/:id',getPostById)

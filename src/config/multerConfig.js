@@ -8,6 +8,11 @@ export const uploader = multer({
     s3: s3,
     bucket: S3_BUCKET_NAME,
     key: function (req, file, cb) { // define file name 
+      if(!file){
+        console.log(file)
+        cb(new Error("File not found"))
+      }
+      //we can validate for file type too
       console.log(file)
       const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9)
       cb(null,file.fieldname + "-" + uniqueSuffix + "." + file.mimetype.split('/')[1])
