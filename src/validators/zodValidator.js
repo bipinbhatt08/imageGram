@@ -2,10 +2,11 @@
 
 export const validate = (schema)=>{
     return (req,res,next)=>{
+
+        console.log("THIS IS THE REQUEST LET's SEEE")
         try {
-            schema.parse({
-                caption: req.body.caption
-            })
+            console.log(req.body, "Req.boy")
+            schema.parse(req.body)
 
             next()
         } catch (e) {

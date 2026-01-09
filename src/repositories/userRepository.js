@@ -1,19 +1,17 @@
-import User from '../schema/user'
+import User from '../schema/user.js'
+
+export const createUser = async(user)=>{
+    const newUser = await User.create(user)
+    return newUser
+}
+
 
 export const findUserByEmail = async(email)=>{
-    try {
-        const user = await User.findOne(email)
-        return user
-    } catch (error) {
-        console.log(error)
-    }
+    const user = await User.findOne(email)
+    return user
 }
 
 export const findAllUsers = async()=>{
-    try {
-        const users = await User.find()
-        return users
-    } catch (error) {
-        console.log(error)
-    }
+    const users = await User.find()
+    return users
 }

@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt' 
+
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
@@ -28,7 +30,27 @@ const userSchema = new Schema({
     minLength:5
   }
   
-},{timestampst:true});
-const user = mongoose.Model("User", userSchema) //create User named collection using userSchema
+},{timestamps:true});
+
+
+// middlewares or mongoose hooks
+
+userSchema.pre('save',function modifyPassword(){
+  
+  if (!this.isModified('password')) {
+    return next()
+  }  // just to avoid double hashing 
+
+  const user = this
+  const SALT = bcrypt.genSaltSync(9)
+
+  const hashedPassword = bcrypt.hashSync(user.password, SALT,)
+
+  user.password = hashedPassword
+
+ 
+})
+
+const user = mongoose.model("User", userSchema) //create User named collection using userSchema
 
 export default user

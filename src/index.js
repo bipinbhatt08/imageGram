@@ -8,8 +8,8 @@ const PORT = 3000
 
 // “For every incoming request, execute this function before reaching route handlers.”
 app.use(express.json())// we use app.use() to add any middleware to every single request. 
-app.use(express.text())
-app.use(express.urlencoded())
+
+app.use(express.urlencoded({extended:true})) //extended: true → Can parse nested objects (deep objects, arrays)
 
 
 app.use('/api',apiRouter)
