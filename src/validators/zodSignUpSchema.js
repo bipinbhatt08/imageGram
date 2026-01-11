@@ -7,7 +7,10 @@ const zodSignUpSchema = z.object({
     email: z
     .string()
     .min(1,{message: "Email is required."})
-    .email({ message: "Valid email is required." })
+    .email({ message: "Valid email is required." }),
+    password:z
+    .string()
+    .min(5,{message:"Password should be at least 5 characters long."})
 }
 )
 

@@ -1,122 +1,58 @@
 import { createPostService, deletePostService, getAllPostService, getPostByIdService, updatePostByIdService } from "../services/postService.js"
+import ApiError from "../utils/apiErrorHandler.js"
+import ApiResponse from "../utils/apiResponse.js"
+import asyncHandler from "../utils/asyncHandler.js"
 
-export const createPost = async(req,res)=>{
-    try {
-        // call the service layer funciton 
-
+export const createPost = asyncHandler(async(req,res)=>{
+    
+        // call the service layer funciton `
         console.log(req.file, "I am from controller.")
         if(!req.file || !req.file.location){
-            return res.status(400).json({
-            success:false,
-            message: "Image is required",
-     
-        })
-
+            throw new ApiError(400, "Image is required")
         }
         const post  =  await createPostService({
             caption: req.body.caption,
             image: req.file.location
         })
     
-        return res.status(201).json({
-            success: true,
-            message:"Post created successfully.",
-            data: post
-        })
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json({
-            success:false,
-            message: "Internal server error.",
-     
-        })
-    }
-}
+        return res.status(201).json(ApiResponse(post,"Post created successfully."))
+})
 //api/v1/posts?limit=10&offset=0
-export const getAllPosts = async(req,res)=>{
+export const getAllPosts = asyncHandler(async(req,res)=>{
 
-   try {
      const limit = req.query.limit || 10
      const offset = req.query.offset || 0
  
      const data = await getAllPostService(offset,limit)
-     return res.status(200).json({
-         success: true,
-         message: "Post fetched succesfully.",
-         data: data,
-         
-         
-     })
-   } catch (error) {
-        console.log(error)
-        return res.status(500).json({
-            success:false,
-            message: "Internal server error.",
-            
-        })
-   }
-}
+     return res.status(200).json(ApiResponse(data,"Post fetched successfully."))
+   
+})
 
-export  const getPostById = async(req,res)=>{
-    try {
+export  const getPostById = asyncHandler(async(req,res)=>{
+    
         const post  = await getPostByIdService(req.params.id)
-        return res.status(200).json({
-            success: true,
-            message: "Post fetched succesfully.",
-            data: post
-        })
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json({
-            success:false,
-            message: "Internal server error.",
-            
-        })
-    }
-}
-export const deletePostById = async(req,res)=>{
-    try {
+        if(!post) throw new ApiError(404,"Post not found")
+        return res.status(200).json(ApiResponse(post,"Post fetched successfully."))
+    
+})
+export const deletePostById = asyncHandler(async(req,res)=>{
         const response = await deletePostService(req.params.id)
         if(!response){
-            return res.status(404).json({
-            success:false,
-            message: "Post not found",
-        })
+            throw new ApiError(404,"Post not found")
         }
-        return res.status(200).json({
-            success: true,
-            message: "Post deleted succesfully.",
-            data: response
-        })
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json({
-            success:false,
-            message: "Internal server error.",
-            
-        })
-    }
-}
-
-export const updatePostById = async(req,res)=>{
-    try {
+        return res.status(200).json(ApiResponse(response,"Post deleted successfully."))
+})
+export const updatePostById = asyncHandler(async(req,res)=>{
+   
         const updateObject  = req.body
         
         if(req.file){
             updateObject.image = req.file.location 
         }
         const response = await updatePostByIdService(req.params.id,updateObject)
-        return res.status(200).json({
-            success: true,
-            message: "Post updated succesfully.",
-            data: response
-        })
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json({
-            success:false,
-            message: "Internal server error.",
-            
-        })
-    }
+        if(!response){
+            throw new ApiError(404,"Post not found.")
+        }
+        return res.status(200).json(ApiResponse(response,"Post updated successfully."))
 }
+)

@@ -2,6 +2,7 @@ import express from 'express'
 import connectDB from './config/dbConfig.js'
 
 import apiRouter from './routing/apiRouter.js'
+import globalErrorHandler from './utils/globalErrorHandler.js'
 
 const app = express() // this app is a server object instance
 const PORT = 3000
@@ -20,6 +21,7 @@ app.get('/ping',(req,res)=>{
     })
 })
 
+app.use(globalErrorHandler)
 
 app.listen(PORT,()=>{
     console.log(`server is listening on port ${PORT}`)
