@@ -7,7 +7,7 @@ export const createUser = async(user)=>{
 
 
 export const findUserByEmail = async(email)=>{
-    const user = await User.findOne(email)
+    const user = await User.findOne({email})
     return user
 }
 
