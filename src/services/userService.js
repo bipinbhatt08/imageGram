@@ -2,6 +2,7 @@ import { createUser, findUserByEmail } from "../repositories/userRepository.js"
 import ApiError from "../utils/apiErrorHandler.js"
 import bcrypt from 'bcrypt'
 import { generateToken } from "../utils/jwt.js"
+import { email } from "zod"
 export const signUpUserService = async(user)=>{
 
     // we did not use any kind of findUserByemail and validate email is unique or there is no user with the provided email exist.. Cause we have unique:true  for email in our user schema. 
@@ -40,4 +41,8 @@ export const signInUserService = async(userDetails)=>{
         throw error
     }
 
+}
+export const checkIfUserExistsService = async(userDetails)=>{
+     const user = await findUserByEmail(userDetails.email)
+     return user
 }
