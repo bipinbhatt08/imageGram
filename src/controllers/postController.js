@@ -6,13 +6,13 @@ import asyncHandler from "../utils/asyncHandler.js"
 export const createPost = asyncHandler(async(req,res)=>{
     
         // call the service layer funciton `
-        console.log(req.file, "I am from controller.")
         if(!req.file || !req.file.location){
             throw new ApiError(400, "Image is required")
         }
         const post  =  await createPostService({
             caption: req.body.caption,
-            image: req.file.location
+            image: req.file.location,
+            user : req.user._id
         })
     
         return res.status(201).json(ApiResponse(post,"Post created successfully."))

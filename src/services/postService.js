@@ -1,4 +1,3 @@
-
 import { countAllPosts, createPost, deletePostById, findAllPosts, findPostById, updatePostById } from "../repositories/postRepository.js"
 export const createPostService = async(createPostObject)=>{
 
@@ -9,10 +8,10 @@ export const createPostService = async(createPostObject)=>{
     // 3. return the post object 
 
     const caption = createPostObject.caption?.trim()
-    const image = createPostObject.image
-    // user will be added later
+    const {image,user } = createPostObject
+    
     // call the repository to talk with the database
-    const post  = await createPost(caption,image)
+    const post  = await createPost(caption,image,user)
     return post
 }
 
