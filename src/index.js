@@ -3,6 +3,7 @@ import connectDB from './config/dbConfig.js'
 
 import apiRouter from './routing/apiRouter.js'
 import globalErrorHandler from './utils/globalErrorHandler.js'
+import ip from 'ip'
 
 const app = express() // this app is a server object instance
 const PORT = 3000
@@ -16,8 +17,10 @@ app.use(express.urlencoded({extended:true})) //extended: true → Can parse nest
 app.use('/api',apiRouter)
 
 app.get('/ping',(req,res)=>{
+
+    const ipaddr = ip.address()
     res.json({
-        message:"Pong"
+        message:"Pong" + ipaddr
     })
 })
 
@@ -27,3 +30,7 @@ app.listen(PORT,()=>{
     console.log(`server is listening on port ${PORT}`)
     connectDB()
 })
+
+
+// client -----> lb --->server 2
+//                  --->server 2
