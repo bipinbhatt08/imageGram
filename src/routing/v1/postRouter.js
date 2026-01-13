@@ -11,7 +11,7 @@ const router = express.Router(); //router object to modulerize the routers
 
 router.post('/',isAuthenticated,uploader.single('image'),validate(zodPostSchema),createPost)
 router.get('/',getAllPosts)
-router.delete('/:id',deletePostById)
+router.delete('/:id',isAuthenticated,deletePostById)
 router.get('/:id',getPostById)
 router.put('/:id',uploader.single('image'),updatePostById)
 export default router

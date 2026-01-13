@@ -1,4 +1,5 @@
-import { countAllPosts, createPost, deletePostById, findAllPosts, findPostById, updatePostById } from "../repositories/postRepository.js"
+import { countAllPosts, createPost, deletePost, findAllPosts, findPostById, updatePostById } from "../repositories/postRepository.js"
+import ApiError from "../utils/apiErrorHandler.js"
 export const createPostService = async(createPostObject)=>{
 
     // this is the core business logic part .. first write al the steps then code ok??÷
@@ -28,9 +29,16 @@ export const getPostByIdService = async(postId)=>{
     return post
 }
 
-export const deletePostService = async(postId)=>{
-    const response = await deletePostById(postId)
+export const deletePostService = async({postId,user})=>{
+    
+    const response = await deletePost({_id:postId,user})
+    if(!response){
+        const exists = await findPostById(postId);
+        if(!exists) throw new ApiError(404,"Post not found");
+         throw new ApiError(403,"Unauthorized");
+    }
     return response
+
 }
 
 export const updatePostByIdService = async(id,updateObject)=>{

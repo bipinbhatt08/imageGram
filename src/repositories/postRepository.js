@@ -25,8 +25,8 @@ export const findPostById = async (id) => {
     return post
 }
 
-export const deletePostById = async (id) => {
-    const response = await Post.findByIdAndDelete(id)
+export const deletePost= async ({user,_id}) => {
+    const response = await Post.findOneAndDelete({_id,user})
     return response
 }
 
@@ -38,4 +38,6 @@ export const updatePostById = async(id,updateObject)=>{
 
 export const findPostByUserId = async (userId) => {
     // function implementation still empty
+    const post = await Post.findOne({user:userId})
+    return post
 }

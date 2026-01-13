@@ -36,7 +36,9 @@ export  const getPostById = asyncHandler(async(req,res)=>{
     
 })
 export const deletePostById = asyncHandler(async(req,res)=>{
-        const response = await deletePostService(req.params.id)
+        const postId = req.params.id
+        const user = req.user?._id
+        const response = await deletePostService({postId,user})
         if(!response){
             throw new ApiError(404,"Post not found")
         }
