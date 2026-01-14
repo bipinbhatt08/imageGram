@@ -1,13 +1,13 @@
-import { success } from "zod"
-import { signInUserService, signUpUserService } from "../services/userService.js"
+
+import { signInUserService, signUpUserService, getUserProfileService} from "../services/userService.js"
 import asyncHandler from "../utils/asyncHandler.js"
 import ApiResponse from "../utils/apiResponse.js"
 
-export const getUserById = async(req,res)=>{
-    res.status(200).json({
-        success:true,
-        message:"Not implemented yet"
-    })
+export const getUserProfile = async(req,res)=>{
+    const id = req.params.id
+    const user = await getUserProfileService(id)
+    return res.status(200).json(ApiResponse(user,"User signed in successfully."))
+
 }
 
 export const signUp = asyncHandler(async(req,res)=>{ 

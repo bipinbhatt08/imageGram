@@ -1,2 +1,7 @@
 1.  Throw errors in services
 2.  Pass errors with next() in middleware
+3. Multer only reads & attaches files
+    ✔ It does nothing if file isn’t sent
+    ✔ req.file exists only when file is uploaded
+
+4. Return an empty array if the user has no posts; only throw 404 if the user or post doesn’t exist.

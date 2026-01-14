@@ -1,4 +1,4 @@
-import { createPostService, deletePostService, getAllPostService, getPostByIdService, updatePostByIdService } from "../services/postService.js"
+import { createPostService, deletePostService, getAllPostService, getPostByIdService, getPostByUserIdService, updatePostService } from "../services/postService.js"
 import ApiError from "../utils/apiErrorHandler.js"
 import ApiResponse from "../utils/apiResponse.js"
 import asyncHandler from "../utils/asyncHandler.js"
@@ -39,9 +39,6 @@ export const deletePostById = asyncHandler(async(req,res)=>{
         const postId = req.params.id
         const user = req.user?._id
         const response = await deletePostService({postId,user})
-        if(!response){
-            throw new ApiError(404,"Post not found")
-        }
         return res.status(200).json(ApiResponse(response,"Post deleted successfully."))
 })
 export const updatePostById = asyncHandler(async(req,res)=>{
@@ -51,10 +48,16 @@ export const updatePostById = asyncHandler(async(req,res)=>{
         if(req.file){
             updateObject.image = req.file.location 
         }
-        const response = await updatePostByIdService(req.params.id,updateObject)
-        if(!response){
-            throw new ApiError(404,"Post not found.")
-        }
+        const user  = req.user._id
+        const response = await updatePostService(req.params.id,user,updateObject)
         return res.status(200).json(ApiResponse(response,"Post updated successfully."))
 }
 )
+
+export const getAllPostsOfUser = async(req,res)=>{
+    const userId = req.params.id
+    const order = req.query.order
+    const response = await getPostByUserIdService(userId,order)
+    return res.status(200).json(ApiResponse(response,"Post fetched successfully."))
+
+}

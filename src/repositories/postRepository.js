@@ -30,14 +30,15 @@ export const deletePost= async ({user,_id}) => {
     return response
 }
 
-export const updatePostById = async(id,updateObject)=>{
-    const post = await Post.findByIdAndUpdate(id,updateObject,{new:true})
+export const updatePostById = async(_id,user,updateObject)=>{
+    const post = await Post.findOneAndUpdate({_id,user},updateObject,{new:true})
     return post
     //new true will make mongoose to return updated document. otherwise it will give us the old documnet not the updated ond
 }
 
-export const findPostByUserId = async (userId) => {
+export const findPostByUserId = async (userId,orderBasedOnDate="desc") => {
     // function implementation still empty
-    const post = await Post.findOne({user:userId})
-    return post
+    const value = orderBasedOnDate === "desc" ? -1 : 1
+    const posts = await Post.find({user:userId}).sort({createdAt:value})
+    return posts
 }
