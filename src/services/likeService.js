@@ -1,4 +1,4 @@
-import { checkIfLikeExist, createLikeOnPost, getLikesOnThePost } from "../repositories/likeRepository.js"
+import { checkIfLikeExist, createLikeOnPost, deleteLikeOnPost, getLikesOnThePost } from "../repositories/likeRepository.js"
 import { findPostById } from "../repositories/postRepository.js";
 import ApiError from "../utils/apiErrorHandler.js"
 
@@ -22,4 +22,15 @@ export const getLikesOnThePostService = async(post)=>{
     }
     const response = await getLikesOnThePost(post)
     return response
+}
+export const deleteLikeOnPostService = async(user,post)=>{
+    const existingPost = await findPostById(post)
+    if (!existingPost) {
+        throw new ApiError(404, "Post not found")
+    }
+    const response = await deleteLikeOnPost(user,post)
+    if(!response){
+        throw new ApiError(409, "User has not liked the post")
+    }
+    return null
 }
