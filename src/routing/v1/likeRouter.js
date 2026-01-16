@@ -1,11 +1,11 @@
 import express from "express"
-import { getLikesOnPost, likeThePost, UnlikeThePost } from "../../controllers/likeController.js"
+import { getLikes, likeLikeable, unlikeLikeable } from "../../controllers/likeController.js"
 import { isAuthenticated } from "../../middleware/isAuthenticated.js"
 
 const router = express.Router()
 
-router.post('/posts/:id',isAuthenticated,likeThePost)
-router.delete('/posts/:id',isAuthenticated,UnlikeThePost)
-router.get('/posts/:id',getLikesOnPost)
+router.post('/',isAuthenticated,likeLikeable)
+router.delete('/',isAuthenticated,unlikeLikeable)
+router.get('/',getLikes)
 
 export default router

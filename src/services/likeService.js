@@ -1,34 +1,41 @@
-import { checkIfLikeExist, createLikeOnPost, deleteLikeOnPost, getLikesOnThePost } from "../repositories/likeRepository.js"
+import { checkIfLikeExist, createLike, deleteLike, getLikes, } from "../repositories/likeRepository.js"
 import { findPostById } from "../repositories/postRepository.js";
 import ApiError from "../utils/apiErrorHandler.js"
 
-export const createLikeOnPostService = async(user,post)=>{
-    const existingPost = await findPostById(post)
-    if (!existingPost) {
-        throw new ApiError(404, "Post not found")
+export const createLikeService = async(user,onModel,likeableId)=>{
+    let likeableExist 
+    if(onModel === "Post") likeableExist = await findPostById(likeableId)
+    // else likeableExist = await findCommentById(likeableId) will add it later
+    if (!likeableExist) {
+        throw new ApiError(404, `${onModel} not found.` )
     }
-    const alreadyLiked = await checkIfLikeExist(user,post)
+    const alreadyLiked = await checkIfLikeExist(user,onModel,likeableId)
     if(alreadyLiked){
-        throw new ApiError(409,"User already liked the post")
+        throw new ApiError(409,"User already liked "+onModel.toLowerCase())
     }
-    const response = await createLikeOnPost(user,post)
+    const response = await createLike(user,onModel,likeableId)
     return response
 }
 
-export const getLikesOnThePostService = async(post)=>{
-    const existingPost = await findPostById(post)
-    if (!existingPost) {
-        throw new ApiError(404, "Post not found")
+export const getLikesService = async(onModel,likeableId)=>{
+    let likeableExist 
+    
+    if(onModel === "Post") likeableExist = await findPostById(likeableId)
+    // else likeableExist = await findCommentById(likeableId) will add it later
+    if (!likeableExist) {
+        throw new ApiError(404, `${onModel} not found.` )
     }
-    const response = await getLikesOnThePost(post)
+    const response = await getLikes(onModel,likeableId)
     return response
 }
-export const deleteLikeOnPostService = async(user,post)=>{
-    const existingPost = await findPostById(post)
-    if (!existingPost) {
-        throw new ApiError(404, "Post not found")
+export const deleteLikeService = async(user,post)=>{
+    let likeableExist 
+    if(onModel === "Post") likeableExist = await findPostById(likeableId)
+    // else likeableExist = await findCommentById(likeableId) will add it later
+    if (!likeableExist) {
+        throw new ApiError(404, `${onModel} not found.` )
     }
-    const response = await deleteLikeOnPost(user,post)
+    const response = await deleteLike(user,post)
     if(!response){
         throw new ApiError(409, "User has not liked the post")
     }

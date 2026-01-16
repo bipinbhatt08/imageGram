@@ -1,25 +1,24 @@
 import Like from "../schema/like.js"
-import user from "../schema/user.js"
 
-export const createLikeOnPost = async(user,post)=>{
-    const response = await Like.create({user,post})
+export const createLike = async(user,onModel,likeableId)=>{
+    const response = await Like.create({user,onModel,likeableId})
     return response
 }
 
-export const checkIfLikeExist = async (user,post)=>{
-    const response = await Like.findOne({user,post})
+export const checkIfLikeExist = async (user,onModel,likeableId)=>{
+    const response = await Like.findOne({user,onModel,likeableId})
     return response
 }
 
-export const getLikesOnThePost = async(post)=>{
-    const likes = await Like.find({post}).populate({ path: 'user', select: 'username' }).sort({ createdAt: -1 });
-    const count = await Like.countDocuments({post})
+export const getLikes= async(onModel,likeableId)=>{
+    const likes = await Like.find({onModel,likeableId}).populate({ path: 'user', select: 'username' }).sort({ createdAt: -1 });
+    const count = await Like.countDocuments({onModel,likeableId})
     return {likes,count}
 }
 
-export const deleteLikeOnPost = async(user,post)=>{
+export const deleteLike = async(user,onModel,likeableId)=>{
 
       // Returns the deleted document, or null if not found
-    const response = await Like.findOneAndDelete({user,post})
+    const response = await Like.findOneAndDelete({user,onModel,likeableId})
     return response
 }

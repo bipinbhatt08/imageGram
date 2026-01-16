@@ -1,23 +1,23 @@
-import { createLikeOnPostService, deleteLikeOnPostService, getLikesOnThePostService } from "../services/likeService.js";
+import { createLikeService, deleteLikeService, getLikesService } from "../services/likeService.js";
 import ApiResponse from "../utils/apiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
-export const likeThePost =asyncHandler( async(req,res)=>{
+export const likeLikeable =asyncHandler( async(req,res)=>{
     const user = req.user._id
-    const post = req.params.id
-    const response = await createLikeOnPostService(user,post)
-    return res.status(201).json(ApiResponse(response,"Post liked successfully."))
+    const {onModel,likeableId} = req.body
+    const response = await createLikeService(user,onModel,likeableId)
+    return res.status(201).json(ApiResponse(response,`${onModel} liked successfully.`))
 })
 
-export const getLikesOnPost = asyncHandler(async(req,res)=>{
-    const post = req.params.id
-    const response = await getLikesOnThePostService(post)
+export const getLikes = asyncHandler(async(req,res)=>{
+    const {onModel,likeableId} = req.query
+    const response = await getLikesService(onModel,likeableId)
     return res.status(200).json(ApiResponse(response,"Likes fetched successfully."))
 })
 
-export const UnlikeThePost =asyncHandler( async(req,res)=>{
+export const unlikeLikeable =asyncHandler( async(req,res)=>{
     const user = req.user._id
-    const post = req.params.id
-    const response = await deleteLikeOnPostService(user,post)
-    return res.status(200).json(ApiResponse(response,"Post unliked successfully."))
+    const {onModel,likeableId} = req.body
+    const response = await deleteLikeService(user,onModel,likeableId)
+    return res.status(200).json(ApiResponse(response,`${onModel} unliked successfully.`))
 })
