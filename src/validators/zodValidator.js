@@ -1,25 +1,20 @@
+import ApiError from "../utils/apiErrorHandler.js"
 
 
 export const validate = (schema)=>{
     return (req,res,next)=>{
-
-        console.log("THIS IS THE REQUEST LET's SEEE")
         try {
-            console.log(req.body, "Req.boy")
+            //check if body is empty 
+            if(!req.body || Object.keys(req.body).length === 0){
+                next(new ApiError(400,"Please provide all the information."))
+            }
+            
             schema.parse(req.body)
-
             next()
         } catch (e) {
             console.log(e)
-            throw e
-            
-            // return res.status(400).json({
-            //     name:"ZodError",
-            //     success:false,
-            //     message:"Validation Errors.",
-            //     error: e.issues
-
-            // })
+            next(new ApiError(400,e.issues[0].message||"Validation Error"))
+        
         }
     }
 }
