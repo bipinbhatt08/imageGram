@@ -2,6 +2,7 @@ import express from 'express'
 import postRouter from './postRouter.js'
 import userRouter from './userRouter.js'
 import likeRouter from './likeRouter.js'
+import commentRouter from './commentRouter.js'
 
 const router = express.Router()
 
@@ -10,5 +11,7 @@ router.use('/posts',postRouter )// if the remaining url i.e. after the /api/v1 
 router.use('/users',userRouter)
 
 router.use('/likes', likeRouter)
+
+router.use('/comments',commentRouter)
 
 export default router
