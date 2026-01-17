@@ -1,4 +1,4 @@
-import { createCommentService } from "../services/commentService.js";
+import { createCommentService, getAllCommentsService } from "../services/commentService.js";
 import ApiResponse from "../utils/apiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
@@ -8,5 +8,15 @@ export const createComment = asyncHandler(async(req,res)=>{
     const response = await createCommentService(user,post,content,parent)
     res.status(201).json(
         ApiResponse(response,"Comment posted successfully.")
+    )
+})
+
+export const getCommentsOnPost = asyncHandler(async(req,res)=>{
+    const limit = parseInt(req.query.limit) || 10
+    const offset = parseInt(req.query.offset) || 0    
+    const post = req.params.id
+    const response = await getAllCommentsService(post,limit,offset)
+    res.status(200).json(
+        ApiResponse(response,"Comment fetched successfully.")
     )
 })
