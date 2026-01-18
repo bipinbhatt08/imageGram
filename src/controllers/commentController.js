@@ -1,5 +1,5 @@
 import post from "../schema/post.js";
-import { createCommentService, getAllCommentsService, getChildCommentsService } from "../services/commentService.js";
+import { createCommentService, deleteCommentService, getAllCommentsService, getChildCommentsService } from "../services/commentService.js";
 import ApiResponse from "../utils/apiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
@@ -26,5 +26,15 @@ export const getReplies = asyncHandler(async(req,res)=>{
     const response = await getChildCommentsService(parent)
     res.status(200).json(
         ApiResponse(response,"Replies fetched successfully.")
+    )
+})
+
+export const deleteComment = asyncHandler(async(req,res)=>{
+    const id = req.params.id
+    const user = req.user._id
+    console.log(id)
+    const response = await deleteCommentService(user,id)
+    res.status(200).json(
+        ApiResponse(null,"Comment deteled successfully.")
     )
 })

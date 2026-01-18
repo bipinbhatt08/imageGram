@@ -1,4 +1,5 @@
 import Comment from "../schema/comment.js"
+import user from "../schema/user.js"
 
 export const createComment = async (user,post,content,parent=null)=>{
     const comment = await Comment.create({user,post,content,parent})
@@ -20,4 +21,14 @@ export const getChildComments = async (parent)=>{
         select:'username email'
     })
     return childs
+}
+
+export const getCommentWithOwners = async(id)=>{
+    const response = await Comment.findById(id).populate({ path: "user", select: "username email" }).populate({ path: "post", select: "user" })
+    return response
+}
+
+export const deleteComment = async(id)=>{
+    const reponse = await Comment.findByIdAndDelete(id)
+    return reponse
 }

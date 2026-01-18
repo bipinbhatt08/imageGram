@@ -1,4 +1,4 @@
-import { createComment, findCommentById, getAllComments, getChildComments } from "../repositories/commentRepository.js"
+import { createComment, deleteComment, findCommentById, getAllComments, getChildComments, getCommentWithOwners } from "../repositories/commentRepository.js"
 import { findPostById } from "../repositories/postRepository.js"
 import ApiError from "../utils/apiErrorHandler.js"
 import { getPostByIdService } from "./postService.js"
@@ -36,5 +36,22 @@ export const findCommentByIdService = async(id)=>{
 
 export const getChildCommentsService = async(parent)=>{
     const response = await getChildComments(parent)
+    return response
+}
+
+
+export const deleteCommentService = async(user,id)=>{
+
+    const comment = await getCommentWithOwners(id)
+    if(!comment){
+        throw new ApiError(404, "No comment found.")
+    }
+    const isCommentOwner = user.toString()==comment.user._id.toString()
+    const isPostOwner = user.toString()==comment.post.user.toString()
+
+    if(!isCommentOwner && !isPostOwner ){
+        throw new ApiError(403,"Unauthorized to delte the comment")
+    }
+    const response = await deleteComment(id)
     return response
 }
