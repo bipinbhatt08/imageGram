@@ -1,6 +1,5 @@
-import { createComment, findCommentById, getAllComments } from "../repositories/commentRepository.js"
+import { createComment, findCommentById, getAllComments, getChildComments } from "../repositories/commentRepository.js"
 import { findPostById } from "../repositories/postRepository.js"
-import post from "../schema/post.js"
 import ApiError from "../utils/apiErrorHandler.js"
 import { getPostByIdService } from "./postService.js"
 
@@ -27,5 +26,15 @@ export const getAllCommentsService = async(post,limit,offset)=>{
         throw new ApiError(404,"Post not found")
     }
     const response = await getAllComments(post,limit,offset)
+    return response
+}
+
+export const findCommentByIdService = async(id)=>{
+    const response = await findCommentById(id)
+    return response
+}
+
+export const getChildCommentsService = async(parent)=>{
+    const response = await getChildComments(parent)
     return response
 }

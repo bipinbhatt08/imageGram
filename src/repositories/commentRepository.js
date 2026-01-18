@@ -14,3 +14,10 @@ export const getAllComments = async (post,limit,offset)=>{
     const count = await Comment.countDocuments({post})
     return {comments,count }
 }
+export const getChildComments = async (parent)=>{
+    const childs = await Comment.find({parent}).sort({createdAt:-1}).populate({
+        path:'user',
+        select:'username email'
+    })
+    return childs
+}
