@@ -28,14 +28,14 @@ export const getLikesService = async(onModel,likeableId)=>{
     const response = await getLikes(onModel,likeableId)
     return response
 }
-export const deleteLikeService = async(user,post)=>{
+export const deleteLikeService = async(user,onModel,likeableId)=>{
     let likeableExist 
     if(onModel === "Post") likeableExist = await findPostById(likeableId)
     // else likeableExist = await findCommentById(likeableId) will add it later
     if (!likeableExist) {
         throw new ApiError(404, `${onModel} not found.` )
     }
-    const response = await deleteLike(user,post)
+    const response = await deleteLike(user,onModel,likeableId)
     if(!response){
         throw new ApiError(409, "User has not liked the post")
     }

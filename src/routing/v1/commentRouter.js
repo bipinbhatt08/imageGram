@@ -7,6 +7,6 @@ const router = express.Router()
 
 router.post('/',isAuthenticated,validate(zodCommentSchema),createComment)
 router.get('/post/:id',getCommentsOnPost)
-router.get('/post/:id/replies',getReplies)
+router.get('/:id/replies',getReplies)
 router.delete('/:id',isAuthenticated,deleteComment)
 export default router
