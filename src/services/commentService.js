@@ -1,4 +1,5 @@
-import { createComment, deleteComment, findCommentById, getAllComments, getChildComments, getCommentWithOwners } from "../repositories/commentRepository.js"
+import mongoose from "mongoose"
+import { createComment, deleteChildComments, deleteComment, findCommentById, getAllComments, getChildComments, getCommentWithOwners } from "../repositories/commentRepository.js"
 import { findPostById } from "../repositories/postRepository.js"
 import ApiError from "../utils/apiErrorHandler.js"
 import { getPostByIdService } from "./postService.js"
@@ -52,6 +53,18 @@ export const deleteCommentService = async(user,id)=>{
     if(!isCommentOwner && !isPostOwner ){
         throw new ApiError(403,"Unauthorized to delte the comment")
     }
-    const response = await deleteComment(id)
-    return response
+    // start session from here
+    const session = await mongoose.startSession()
+    await session.startTransaction()
+    try {
+        const response = await deleteComment(id,session) 
+        await deleteChildComments(id,session)
+        await session.commitTransaction()
+        return response
+    } catch (error) {
+        await session.abortTransaction()
+        throw new ApiError(400,"Problem while deleting comment")
+    }finally{
+        await session.endSession()
+    }
 }

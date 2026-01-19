@@ -28,18 +28,12 @@ export const getCommentWithOwners = async(id)=>{
     return response
 }
 
-export const deleteComment = async(id)=>{
-    const session = await mongoose.startSession();
-    session.startTransaction();
-    try {
-       const comment =  await Comment.findByIdAndDelete(id,{session})
-        await Comment.deleteMany({parent:id},{session})
-        await session.commitTransaction();
-        return comment
-    } catch (error) {
-        await session.abortTransaction();
-        throw error
-    } finally {
-        await session.endSession();
-    }
+export const deleteComment = async(id,session)=>{
+    const comment =  await Comment.findOneAndDelete({_id:id},{session})
+    return comment
+}
+
+export const deleteChildComments = async(parent,session)=>{
+    const response = await Comment.deleteMany({parent},{session})
+    return response
 }
