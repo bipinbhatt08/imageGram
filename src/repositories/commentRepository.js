@@ -1,5 +1,5 @@
 import Comment from "../schema/comment.js"
-import user from "../schema/user.js"
+import mongoose from "mongoose"
 
 export const createComment = async (user,post,content,parent=null)=>{
     const comment = await Comment.create({user,post,content,parent})
@@ -29,6 +29,17 @@ export const getCommentWithOwners = async(id)=>{
 }
 
 export const deleteComment = async(id)=>{
-    const reponse = await Comment.findByIdAndDelete(id)
-    return reponse
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+       const comment =  await Comment.findByIdAndDelete(id,{session})
+        await Comment.deleteMany({parent:id},{session})
+        await session.commitTransaction();
+        return comment
+    } catch (error) {
+        await session.abortTransaction();
+        throw error
+    } finally {
+        await session.endSession();
+    }
 }
