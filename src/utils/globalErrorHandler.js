@@ -9,10 +9,12 @@ const globalErrorHandler = (err, req, res, next) => {
     if(err instanceof ZodError){
         message= err.issues[0].message
         statusCode = 400
-    }
-    else if ( err instanceof ApiError) {
+    }else if ( err instanceof ApiError) {
         message = err.message 
         statusCode  = err.statusCode
+    }else if(err.name === "CastError"){
+        message = "Invalid id format."
+        statusCode = 400
     }
     res.status(statusCode).json({ 
         message,
