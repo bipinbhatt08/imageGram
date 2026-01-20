@@ -15,11 +15,11 @@ export const getAllComments = async (post,limit,offset)=>{
     const count = await Comment.countDocuments({post})
     return {comments,count }
 }
-export const getChildComments = async (parent)=>{
+export const getChildComments = async (parent,session)=>{
     const childs = await Comment.find({parent}).sort({createdAt:-1}).populate({
         path:'user',
         select:'username email'
-    })
+    }).session(session)// if we put sesion in find. that will only work for find not for other so bahir arakheko
     return childs
 }
 

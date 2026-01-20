@@ -22,3 +22,12 @@ export const deleteLike = async(user,onModel,likeableId)=>{
     const response = await Like.findOneAndDelete({user,onModel,likeableId})
     return response
 }
+
+export const deleteManyLike = async(onModel,likeableIds,session)=>{
+    const response = await Like.deleteMany({
+        onModel,
+        likeableId:{$in:likeableIds },
+        
+    },{session})
+    return response
+}

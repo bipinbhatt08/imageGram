@@ -1,4 +1,4 @@
-import { checkIfLikeExist, createLike, deleteLike, getLikes, } from "../repositories/likeRepository.js"
+import { checkIfLikeExist, createLike, deleteLike, deleteManyLike, getLikes, } from "../repositories/likeRepository.js"
 import { findPostById } from "../repositories/postRepository.js";
 import ApiError from "../utils/apiErrorHandler.js"
 import { findCommentByIdService } from "./commentService.js";
@@ -40,4 +40,9 @@ export const deleteLikeService = async(user,onModel,likeableId)=>{
         throw new ApiError(409, "User has not liked the post")
     }
     return null
+}
+export const deleteManyLikeService = async(onModel,likeableIds,session)=>{
+    //we another service is calling it.. will get valid data only
+        const response = await deleteManyLike(onModel,likeableIds,session)
+        return response
 }
