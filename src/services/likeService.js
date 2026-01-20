@@ -1,11 +1,12 @@
 import { checkIfLikeExist, createLike, deleteLike, getLikes, } from "../repositories/likeRepository.js"
 import { findPostById } from "../repositories/postRepository.js";
 import ApiError from "../utils/apiErrorHandler.js"
+import { findCommentByIdService } from "./commentService.js";
 
 export const createLikeService = async(user,onModel,likeableId)=>{
     let likeableExist 
     if(onModel === "Post") likeableExist = await findPostById(likeableId)
-    // else likeableExist = await findCommentById(likeableId) will add it later
+    else likeableExist = await findCommentByIdService(likeableId)
     if (!likeableExist) {
         throw new ApiError(404, `${onModel} not found.` )
     }
@@ -19,9 +20,8 @@ export const createLikeService = async(user,onModel,likeableId)=>{
 
 export const getLikesService = async(onModel,likeableId)=>{
     let likeableExist 
-    
     if(onModel === "Post") likeableExist = await findPostById(likeableId)
-    // else likeableExist = await findCommentById(likeableId) will add it later
+    else likeableExist = await findCommentByIdService(likeableId)
     if (!likeableExist) {
         throw new ApiError(404, `${onModel} not found.` )
     }
@@ -31,7 +31,7 @@ export const getLikesService = async(onModel,likeableId)=>{
 export const deleteLikeService = async(user,onModel,likeableId)=>{
     let likeableExist 
     if(onModel === "Post") likeableExist = await findPostById(likeableId)
-    // else likeableExist = await findCommentById(likeableId) will add it later
+    else likeableExist = await findCommentByIdService(likeableId) 
     if (!likeableExist) {
         throw new ApiError(404, `${onModel} not found.` )
     }
