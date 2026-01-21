@@ -1,13 +1,14 @@
 import mongoose from 'mongoose'
+import { minLength, required } from 'zod/mini'
 const postSchema = mongoose.Schema({
     caption:{
         type:String,
         required:true,
-        minLenght:5,
+        minLength:5,
     },
     image:{
         type:String,
-        require:true
+        required:true
     },
     user:{
         type:mongoose.Schema.Types.ObjectId,// this obejct id will always belong to the User collectioin
@@ -15,5 +16,5 @@ const postSchema = mongoose.Schema({
     }
 },{timestamps:true})
 
-const post = mongoose.model("Post",postSchema)
-export default post
+const Post = mongoose.model("Post",postSchema)
+export default Post
