@@ -1,6 +1,6 @@
 import ApiResponse from "../utils/apiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import { followSomeoneService, unFollowSomeoneService,checkIfFollowingService} from "../services/followService.js";
+import { followSomeoneService, unFollowSomeoneService,checkIfFollowingService, getFollowersService, getFollowingService} from "../services/followService.js";
 
 export const followSomeone = asyncHandler(async(req,res)=>{
     const follower = req.user._id //follower is vaild id.
@@ -30,5 +30,19 @@ export const checkIfFollowing = asyncHandler(async(req,res)=>{
     )
 })
 
+export const getFollowers = asyncHandler(async(req,res)=>{
+    const followee = req.params.id
+    const response = await getFollowersService(followee)
+    res.status(200).json(
+        ApiResponse(response,"Followers fetched successfully ")
+    )
+})
+export const getFollowing = asyncHandler(async(req,res)=>{
+    const follower= req.params.id
+    const response = await getFollowingService(follower)
+    res.status(200).json(
+        ApiResponse(response,"Following fetched successfully")
+    )
+})
 
 

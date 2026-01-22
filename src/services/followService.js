@@ -1,6 +1,6 @@
 import ApiError from '../utils/apiErrorHandler.js'
 import {getUserProfileService} from './userService.js'
-import { checkIfFollowing,followSomeone,unFollowSomeone } from '../repositories/followRepository.js'
+import { checkIfFollowing,followSomeone,getFollowers,getFollowing,unFollowSomeone } from '../repositories/followRepository.js'
 
 export const followSomeoneService = async(follower, followee)=>{
     // check if followee exists
@@ -42,4 +42,15 @@ export const unFollowSomeoneService = async(follower, followee)=>{
     await unFollowSomeone(follower,followee)
     return null
     
+}
+
+export const getFollowersService = async(followee)=>{
+    await getUserProfileService(followee) 
+    const response = await getFollowers(followee)
+    return response
+}
+export const getFollowingService = async(follower)=>{
+    await getUserProfileService(follower) 
+    const response = await getFollowing(follower)
+    return response
 }
