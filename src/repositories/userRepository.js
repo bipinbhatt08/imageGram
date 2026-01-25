@@ -12,8 +12,8 @@ export const findUserByEmail = async(email)=>{
     return user
 }
 
-export const findAllUsers = async()=>{
-    const users = await User.find()
+export const findAllUsers = async(filter={})=>{
+    const users = await User.find(filter)
     return users
 }
 

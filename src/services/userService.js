@@ -1,4 +1,4 @@
-import { createUser, findUser, findUserByEmail } from "../repositories/userRepository.js"
+import { createUser, findAllUsers, findUser, findUserByEmail } from "../repositories/userRepository.js"
 import ApiError from "../utils/apiErrorHandler.js"
 import bcrypt from 'bcrypt'
 import { generateToken } from "../utils/jwt.js"
@@ -53,4 +53,8 @@ export const signInUserService = async(userDetails)=>{
 export const checkIfUserExistsService = async(userDetails)=>{
      const user = await findUserByEmail(userDetails.email)
      return user
+}
+export const getUsersService = async(filter={})=>{
+    const response = await findAllUsers(filter)
+    return response
 }
