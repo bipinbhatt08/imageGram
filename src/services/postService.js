@@ -1,5 +1,7 @@
+import { createNotification } from "../repositories/notificationRepository.js"
 import { countAllPosts, createPost, deletePost, findAllPosts, findPostById, findPostByUserId, updatePostById } from "../repositories/postRepository.js"
 import ApiError from "../utils/apiErrorHandler.js"
+import { getFollowersService } from "./followService.js"
 import { getUserProfileService } from "./userService.js"
 export const createPostService = async(createPostObject)=>{
 
@@ -10,11 +12,30 @@ export const createPostService = async(createPostObject)=>{
     // 3. return the post object 
 
     const caption = createPostObject.caption?.trim()
-    const {image,user } = createPostObject
+    const {image, user} = createPostObject
     
     // call the repository to talk with the database
     const post  = await createPost(caption,image,user)
+
+    //Now create notification 
+    /// we put it in try catch so that even if it fails client should get the post
+    try {
+        const creatorInfo = await getUserProfileService(user)
+        const follower = await getFollowersService(creatorInfo._id)// fetch  followers
+        if(follower.count===0){
+            return post
+        }
+        const receivers = follower.followers.map((item)=>item._id)
+        const message = `${creatorInfo.username} added a post.`
+        await createNotification({creator:user,receivers,targetModel:"Post",targetId:post._id,message})  
+    } catch (error) {
+        console.log(error)
+    }
+    //later we will emit it 
+
+
     return post
+
 }
 
 export const getAllPostService = async(offset,limit)=>{
