@@ -36,7 +36,11 @@ export const createLikeService = async(user,onModel,likeableId)=>{
         notificationCreateObj.message = `${creatorInfo?.username} liked your comment.`
         notificationCreateObj.receivers = [...notificationCreateObj.receivers, commentExists.user]
     }
-    createNotificationService(notificationCreateObj)
+    try {
+        await createNotificationService(notificationCreateObj)
+    } catch (error) {
+        console.log(error)
+    }    
     return response
 }
 
