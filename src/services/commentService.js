@@ -4,6 +4,8 @@ import { findPostById } from "../repositories/postRepository.js"
 import ApiError from "../utils/apiErrorHandler.js"
 import { getPostByIdService } from "./postService.js"
 import {  deleteManyLikeService } from "./likeService.js"
+import { createNotificationService } from "./notificationService.js"
+import { getUserProfileService } from "./userService.js"
 
 export const createCommentService = async(user,post,content,parent=null)=>{
     //user will be valid ..but about post.. 
@@ -12,13 +14,43 @@ export const createCommentService = async(user,post,content,parent=null)=>{
     if(!postExist){
         throw new ApiError(404,"Post not found")
     }
+    let parentExist
     if(parent){
-        const parentExist = await findCommentById(parent)
+         parentExist = await findCommentById(parent)
         if(!parentExist){
             throw new ApiError(404,"Comment not found for reply")
         }
     }
     const response = await createComment(user,post,content,parent)
+
+    
+    const userInfo = await getUserProfileService(user)
+    const postOwner = postExist.user
+   
+    // if it's not reply
+    if(!parentExist){
+        if(postOwner.toString()!==user.toString()){
+             await createNotificationService({creator:user,targetModel:"Post",targetId:post,message:`${userInfo.username} commented on your post.`,receivers:[postOwner]})
+        }
+       
+    }else{//if it's areply
+        if(user.toString()===postOwner.toString()){//commenting on own post
+            if(parentExist.user.toString()!== user.toString()){//not replying own comment
+                await createNotificationService({creator:user,targetModel:"Comment",targetId:parent,message:`${userInfo.username} replied to your comment.`,receivers:[parentExist.user]})
+            }
+        }else{
+            //commenting on other's Post
+            //1...replying to own comment in other's post
+            if(user.toString()===parentExist.user.toString()){//
+                await createNotificationService({creator:user,targetModel:"Post",targetId:post,message:`${userInfo.username} commented on your post.`,receivers:[postOwner]})
+            }else{
+                //2. replying to others comment
+                await createNotificationService({creator:user,targetModel:"Post",targetId:post,message:`${userInfo.username} commented on your post.`,receivers:[postOwner]})
+
+                await createNotificationService({creator:user,targetModel:"Comment",targetId:parent,message:`${userInfo.username} replied to your comment.`,receivers:[parentExist.user]})
+            }
+        }
+    }
     return response
 }
 
