@@ -18,8 +18,6 @@ export const createPostService = async(createPostObject)=>{
     const post  = await createPost(caption,image,user)
 
     //Now create notification 
-    /// we put it in try catch so that even if it fails client should get the post
-    try {
         const creatorInfo = await getUserProfileService(user)
         const follower = await getFollowersService(creatorInfo._id)// fetch  followers
         if(follower.count===0){
@@ -28,9 +26,7 @@ export const createPostService = async(createPostObject)=>{
         const receivers = follower.followers.map((item)=>item._id)
         const message = `${creatorInfo.username} added a post.`
         await createNotification({creator:user,receivers,targetModel:"Post",targetId:post._id,message})  
-    } catch (error) {
-        console.log(error)
-    }
+    
     //later we will emit it 
 
 

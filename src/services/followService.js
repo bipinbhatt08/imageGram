@@ -24,7 +24,6 @@ export const followSomeoneService = async(follower, followee)=>{
 
     // 
     const followerInfo = await getUserProfileService(follower)
-    try {
         await createNotificationService({
             creator: follower,
             receivers:[followee],
@@ -32,9 +31,6 @@ export const followSomeoneService = async(follower, followee)=>{
             targetModel: "User",
             message:`${followerInfo.username} started following you.`
         })
-    } catch (error) {
-        console.log(error)// don't break the flow cause notification is not that important
-    }
     return response
     
 }
