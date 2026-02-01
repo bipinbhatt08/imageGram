@@ -1,6 +1,7 @@
 import ApiError from '../utils/apiErrorHandler.js'
 import {getUserProfileService} from './userService.js'
 import { checkIfFollowing,followSomeone,getFollowers,getFollowing,unFollowSomeone } from '../repositories/followRepository.js'
+import { createNotificationService } from './notificationService.js'
 
 export const followSomeoneService = async(follower, followee)=>{
     // check if followee exists
@@ -20,6 +21,20 @@ export const followSomeoneService = async(follower, followee)=>{
     
     //now follow
     const response = await followSomeone(follower,followee)
+
+    // 
+    const followerInfo = await getUserProfileService(follower)
+    try {
+        await createNotificationService({
+            creator: follower,
+            receivers:[followee],
+            targetId:follower, 
+            targetModel: "User",
+            message:`${followerInfo.username} started following you.`
+        })
+    } catch (error) {
+        console.log(error)// don't break the flow cause notification is not that important
+    }
     return response
     
 }
