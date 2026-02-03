@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import user from "./user";
 const likeSchema = mongoose.Schema({
 
 //polymorphic Like model so a single collection can handle likes for both posts and comments

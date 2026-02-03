@@ -1,5 +1,5 @@
 import Comment from "../schema/comment.js"
-import mongoose from "mongoose"
+
 
 export const createComment = async (user,post,content,parent=null)=>{
     const comment = await Comment.create({user,post,content,parent})

@@ -1,4 +1,3 @@
-import post from "../schema/post.js";
 import { createCommentService, deleteCommentService, getAllCommentsService, getChildCommentsService } from "../services/commentService.js";
 import ApiResponse from "../utils/apiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";

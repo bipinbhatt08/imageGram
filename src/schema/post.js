@@ -1,5 +1,4 @@
 import mongoose from 'mongoose'
-import { minLength, required } from 'zod/mini'
 const postSchema = mongoose.Schema({
     caption:{
         type:String,
