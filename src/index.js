@@ -4,9 +4,21 @@ import connectDB from './config/dbConfig.js'
 import apiRouter from './routing/apiRouter.js'
 import globalErrorHandler from './utils/globalErrorHandler.js'
 import ip from 'ip'
+import rateLimit from 'express-rate-limit'
 
 const app = express() // this app is a server object instance
 const PORT = 3000
+
+
+const limiter = rateLimit({
+	windowMs: 1 * 60 * 1000, // 1minutes
+	limit: 5, // 5requuest per minute (just for checking..)
+    message:"Too many requests! please try again later."
+})
+
+// Apply the rate limiting middleware to all requests.
+app.use(limiter)
+
 
 // “For every incoming request, execute this function before reaching route handlers.”
 app.use(express.json())// we use app.use() to add any middleware to every single request. 
