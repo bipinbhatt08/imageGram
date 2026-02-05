@@ -35,7 +35,7 @@ const userSchema = new Schema({
 
 // middlewares or mongoose hooks
 
-userSchema.pre('save',function modifyPassword(){
+userSchema.pre('save',function modifyPassword(next){
   
   if (!this.isModified('password')) {
     return next()

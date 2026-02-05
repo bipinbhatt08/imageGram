@@ -22,3 +22,9 @@ export const findUser = async(id)=>{
     const user = await User.findById(id).select('-password')
     return user
 }
+export const changePassword = async({id,password})=>{
+     const user = await User.findById(id)
+     user.password = password
+     await user.save()
+     return user
+}

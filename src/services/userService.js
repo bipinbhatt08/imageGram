@@ -1,4 +1,4 @@
-import { createUser, findAllUsers, findUser, findUserByEmail } from "../repositories/userRepository.js"
+import { changePassword, createUser, findAllUsers, findUser, findUserByEmail } from "../repositories/userRepository.js"
 import ApiError from "../utils/apiErrorHandler.js"
 import bcrypt from 'bcrypt'
 import { generateToken } from "../utils/jwt.js"
@@ -56,5 +56,23 @@ export const checkIfUserExistsService = async(userDetails)=>{
 }
 export const getUsersService = async(filter={})=>{
     const response = await findAllUsers(filter)
+    return response
+}
+
+export const changePasswordService = async({user,currentPassword,newPassword})=>{
+
+    // let's check they know their password'
+    const userDetails = await findUserByEmail(user.email)
+    console.log(userDetails)
+    console.log(currentPassword)
+    const isPasswordCorrect = bcrypt.compareSync(currentPassword,userDetails.password)
+    if(!isPasswordCorrect){
+        throw new ApiError(400,"Incorrect password")
+    }
+    const isPassSame = bcrypt.compareSync(newPassword,userDetails.password)
+    if(isPassSame){
+        throw new ApiError(400,"New password can not be same as old password.")
+    }
+    const response = await changePassword({id:userDetails._id,password:newPassword})
     return response
 }

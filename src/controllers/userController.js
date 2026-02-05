@@ -1,5 +1,5 @@
 
-import { signInUserService, signUpUserService, getUserProfileService} from "../services/userService.js"
+import { signInUserService, signUpUserService, getUserProfileService, changePasswordService} from "../services/userService.js"
 import asyncHandler from "../utils/asyncHandler.js"
 import ApiResponse from "../utils/apiResponse.js"
 
@@ -19,3 +19,10 @@ export const signIn = asyncHandler(async(req,res)=>{
     const response = await signInUserService(req.body)
     return res.status(200).json(ApiResponse(response,"User signed in successfully."))
 }) 
+
+export const changePassword = asyncHandler(async(req,res)=>{
+    const {user} = req
+    const {currentPassword,newPassword} = req.body
+    const response = await changePasswordService({user,currentPassword,newPassword})
+    return res.status(200).json(ApiResponse(null,"Password changed successfully"))
+})
